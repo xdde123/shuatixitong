@@ -1,2 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources><style name="AppTheme" parent="android:style/Theme.Material.Light.NoActionBar"><item name="android:windowSplashScreenBackground">#F5F7FB</item><item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_splash</item><item name="android:postSplashScreenTheme">@style/AppThemePost</item><item name="android:windowLightStatusBar">true</item></style></resources>
+<resources>
+
+    <style name="AppTheme" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowSplashScreenBackground">#F5F7FB</item>
+        <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
+        <item name="android:windowSplashScreenAnimationDuration">300</item>
+        <item name="android:postSplashScreenTheme">@style/AppThemePost</item>
+    </style>
+
+    <style name="AppThemePost" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
+
+</resources>

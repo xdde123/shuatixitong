@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#172033">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="管理系统">
+<meta name="application-name" content="管理系统">
+<title>管理系统</title>
+<style>
+:root{--bg:#f5f7fb;--card:#fff;--text:#172033;--muted:#728096;--blue:#2f80ed;--green:#18a874;--orange:#f59e0b;--red:#e65252;--line:#e8edf5;--shadow:0 8px 24px rgba(28,44,77,.08)}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:var(--text)}
+header{position:sticky;top:0;z-index:5;background:rgba(245,247,251,.94);backdrop-filter:blur(14px);padding:16px 16px 10px;border-bottom:1px solid var(--line)}
+h1{font-size:20px;margin:0 0 5px} .sub{font-size:12px;color:var(--muted)} .nav{display:flex;gap:8px;overflow:auto;padding:10px 0 0} .nav button{white-space:nowrap;border:0;background:#e9eef6;color:#516078;padding:9px 13px;border-radius:12px;font-size:13px} .nav button.active{background:var(--text);color:#fff}
+main{max-width:1100px;margin:auto;padding:16px 16px 90px} .view{display:none} .view.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px} @media(max-width:760px){.grid{grid-template-columns:repeat(2,1fr)}}
+.card{background:var(--card);border-radius:16px;padding:16px;box-shadow:var(--shadow);margin-bottom:14px} .metric .label{font-size:12px;color:var(--muted)} .metric .num{font-size:26px;font-weight:800;margin-top:8px} .blue{color:var(--blue)} .green{color:var(--green)} .orange{color:var(--orange)} .red{color:var(--red)}
+.section-title{font-size:17px;font-weight:800;margin:4px 0 12px} .progress{height:10px;background:#edf1f6;border-radius:999px;overflow:hidden} .progress>i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),#63b1ff);border-radius:999px}
+button{cursor:pointer} .primary{background:var(--blue);color:white;border:0;border-radius:10px;padding:10px 14px;font-weight:700} .danger{background:#fff0f0;color:var(--red);border:1px solid #ffd5d5;border-radius:10px;padding:9px 12px} .ghost{background:#fff;border:1px solid var(--line);border-radius:10px;padding:9px 12px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px} input,select,textarea{width:100%;border:1px solid var(--line);border-radius:9px;padding:9px;background:#fff;font:inherit;color:var(--text)} textarea{min-height:64px;resize:vertical} label{font-size:12px;color:var(--muted);display:block;margin-bottom:4px}
+.tablewrap{overflow:auto;border:1px solid var(--line);border-radius:14px;background:#fff} table{width:100%;border-collapse:collapse;min-width:880px} th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:13px} th{background:#f8fafc;color:#59677c;position:sticky;top:0} tr:hover{background:#fbfdff}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#eef3f9;font-size:12px} .done{background:#e9f8f1;color:#13895e} .warn{background:#fff5df;color:#b77908} .late{background:#fff0f0;color:#d84c4c}
+.small{font-size:12px;color:var(--muted)} .row{display:grid;grid-template-columns:repeat(2,1fr);gap:12px} @media(max-width:700px){.row{grid-template-columns:1fr}}
+.course-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px} .course-head{display:flex;justify-content:space-between;gap:8px} .checks{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:13px} .checks label{display:flex;align-items:center;gap:5px;color:var(--text);margin:0} .checks input{width:auto}
+.notice{padding:12px;border-radius:12px;background:#eef6ff;color:#315b91;font-size:13px;margin-bottom:12px} .empty{text-align:center;color:var(--muted);padding:30px}
+.footer-note{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:8px 16px;font-size:12px;color:var(--muted);text-align:center;z-index:8}
+
+/* ===== 上岸 2.0 智能升级 ===== */
+@media(max-width:760px){
+  header{padding:12px 12px 8px}
+  h1{font-size:18px}
+  main{padding:12px 12px 92px}
+  .nav{display:none}
+  .mobile-quick{display:grid!important;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0 2px}
+  .mobile-quick button{border:0;border-radius:12px;padding:10px 4px;background:#eef3f9;font-size:11px}
+  .smart-hero{padding:18px!important}
+  .smart-hero .big{font-size:42px!important}
+  .quick-grid{grid-template-columns:repeat(2,1fr)!important}
+  .card{padding:14px}
+}
+.mobile-quick{display:none}
+.smart-hero{background:linear-gradient(135deg,#1f6feb,#5ba9ff);color:#fff;border-radius:20px;padding:22px;box-shadow:0 10px 28px rgba(47,128,237,.22);margin-bottom:14px}
+.smart-hero .big{font-size:50px;font-weight:900;line-height:1}
+.smart-hero .hero-sub{opacity:.92;margin-top:8px}
+.quick-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.quick-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:14px;text-align:left}
+.quick-card .qicon{font-size:22px}.quick-card .qnum{font-size:22px;font-weight:800;margin-top:6px}.quick-card .qlabel{font-size:12px;color:var(--muted)}
+.alert{border-left:4px solid var(--red);background:#fff4f4;padding:12px;border-radius:10px;margin:8px 0;font-size:13px}
+.good{border-left:4px solid var(--green);background:#effaf5;padding:12px;border-radius:10px;margin:8px 0;font-size:13px}
+.reco{padding:12px;border:1px solid #dceaff;background:#f7fbff;border-radius:12px;margin:8px 0}
+.level{display:inline-flex;align-items:center;gap:8px;padding:9px 12px;border-radius:999px;background:rgba(255,255,255,.18);font-weight:700}
+.chart{width:100%;height:220px;display:block}
+.chart-grid{stroke:#e8edf5;stroke-width:1}.chart-line{fill:none;stroke:#2f80ed;stroke-width:3}.chart-dot{fill:#2f80ed}
+
+</style>
+
+<style>
+html,body{width:100%;max-width:100%;overflow-x:hidden}
+@media(max-width:760px){
+  body{font-size:15px}
+  header{padding:12px 12px 8px}
+  h1{font-size:21px}
+  .sub{font-size:11px}
+  main{padding:10px 10px 110px}
+  .card{padding:13px;border-radius:14px;margin-bottom:10px}
+  .grid,.quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:8px}
+  .nav{gap:6px;padding-top:8px}
+  .nav button{font-size:13px;padding:10px 12px;min-height:42px}
+  button,input,select,textarea{font-size:16px!important;min-height:44px}
+  table{display:block;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .smart-hero{padding:18px 14px!important}
+  .big{font-size:44px!important}
+  .quick-card{min-height:92px}
+  .mobile-quick{position:sticky;top:0;z-index:4;margin-bottom:10px}
+}
+</style>
+
+
+<style id="phone-desktop-style">
+:root{--safe-bottom:env(safe-area-inset-bottom,0px)}
+html,body{min-height:100%;width:100%;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
+body{padding-bottom:calc(16px + var(--safe-bottom))}
+button{touch-action:manipulation}
+@media(max-width:760px){
+  body{background:#f5f7fb}
+  header{
+    position:sticky;top:0;z-index:50;
+    padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px;
+  }
+  h1{font-size:22px;letter-spacing:.5px}
+  .sub{font-size:12px;line-height:1.6}
+  main{padding:10px 10px calc(92px + var(--safe-bottom));width:100%}
+  .nav{
+    position:fixed;left:0;right:0;bottom:0;z-index:100;
+    display:grid!important;grid-template-columns:repeat(4,1fr)!important;
+    gap:0!important;padding:8px 8px calc(8px + var(--safe-bottom))!important;
+    margin:0!important;overflow:visible!important;
+    background:rgba(255,255,255,.96);border-top:1px solid #e8edf5;
+    box-shadow:0 -8px 24px rgba(28,44,77,.08);
+    backdrop-filter:blur(16px)
+  }
+  .nav button{
+    min-width:0!important;min-height:52px!important;border-radius:12px!important;
+    padding:6px 2px!important;font-size:12px!important;line-height:1.2!important;
+    background:transparent!important;color:#728096!important
+  }
+  .nav button.active{background:#172033!important;color:#fff!important}
+  .grid,.quick-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+  .card{padding:14px!important;border-radius:16px!important;margin-bottom:10px!important}
+  .smart-hero{padding:18px 16px!important;border-radius:18px!important}
+  .quick-card{min-height:88px!important;border-radius:14px!important}
+  .big{font-size:48px!important}
+  .section-title{font-size:16px!important}
+  .mobile-quick{display:none!important}
+  input,select,textarea,button{font-size:16px!important}
+  table{display:block!important;max-width:100%!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important}
+}
+
+/* ===== Android App 增强功能 ===== */
+.appbar-actions{display:flex;gap:8px;align-items:center;margin-top:8px}.app-pill{border:0;border-radius:999px;padding:8px 11px;background:#eef3f9;color:#42526a;font-size:12px}.quiz-question{font-size:18px;font-weight:800;line-height:1.7;white-space:pre-wrap}.option{display:block;width:100%;text-align:left;margin:9px 0;padding:14px;border:1px solid var(--line);border-radius:14px;background:#fff}.option.correct{border-color:#18a874;background:#effaf5}.option.wrong{border-color:#e65252;background:#fff2f2}.option.selected{outline:2px solid #2f80ed}.quiz-meta{display:flex;justify-content:space-between;gap:10px;font-size:12px;color:var(--muted);margin-bottom:10px}.native-tip{padding:12px;border-radius:12px;background:#f7fbff;border:1px solid #dceaff;margin:10px 0;font-size:13px}
+</style>
+
+</head>
+<body>
+<header>
+  <h1>🎯 管理系统</h1>
+  <div class="sub">2026.08.27 — 2026.10.17｜App 本地保存｜严格执行、数据追踪、动态纠偏</div><div class="appbar-actions"><button class="app-pill" onclick="show('quiz')">✍️ 开始刷题</button><button class="app-pill" onclick="show('data')">💾 备份</button><button class="app-pill" onclick="nativeReminderPrompt()">🔔 提醒</button></div>
+  <div class="nav" id="nav"></div>
+</header>
+<main>
+<section class="view active" id="dashboard"></section>
+<section class="view" id="daily"></section>
+<section class="view" id="courses"></section>
+<section class="view" id="errors"></section>
+<section class="view" id="mocks"></section>
+<section class="view" id="weekly"></section>
+<section class="view" id="countdown"></section>
+<section class="view" id="data"></section>
+<section class="view" id="quiz"></section>
+<section class="view" id="quiz"></section>
+</main>
+<div class="footer-note">Android App 本地保存｜支持备份恢复、题库导入、每日提醒。</div>
+<script>
+const BASE_COURSES = [{"id": 1, "module": "资料分析", "no": 1, "name": "增长率拔高专项", "planDate": "2026-08-27", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 2, "module": "资料分析", "no": 2, "name": "间隔增长率拔高专项", "planDate": "2026-08-27", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 3, "module": "资料分析", "no": 3, "name": "乘积增长率和年均增长率拔高专项", "planDate": "2026-08-28", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 4, "module": "资料分析", "no": 4, "name": "混合增长率拔高专项", "planDate": "2026-08-28", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 5, "module": "资料分析", "no": 5, "name": "增长量拔高专项", "planDate": "2026-08-29", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 6, "module": "资料分析", "no": 6, "name": "基期量拔高专项", "planDate": "2026-08-29", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 7, "module": "资料分析", "no": 7, "name": "现期量拔高专项", "planDate": "2026-08-30", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 8, "module": "资料分析", "no": 8, "name": "比重拔高专项", "planDate": "2026-08-30", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 9, "module": "资料分析", "no": 9, "name": "平均数拔高专项", "planDate": "2026-08-31", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 10, "module": "资料分析", "no": 10, "name": "倍数拔高专项", "planDate": "2026-08-31", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 11, "module": "资料分析", "no": 11, "name": "A和非A思想拔高专项", "planDate": "2026-09-01", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 12, "module": "资料分析", "no": 12, "name": "资料分析高频易错点", "planDate": "2026-09-01", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 13, "module": "判断推理", "no": 13, "name": "必然性-母题模型（假言推理+朴素逻辑）", "planDate": "2026-09-02", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 14, "module": "判断推理", "no": 14, "name": "必然性-母题模型（综合推理+其他）", "planDate": "2026-09-02", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 15, "module": "判断推理", "no": 15, "name": "必然性-母题模型（真假话+其他）", "planDate": "2026-09-03", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 16, "module": "判断推理", "no": 16, "name": "加强型（因果论证+论证模型）", "planDate": "2026-09-03", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 17, "module": "判断推理", "no": 17, "name": "加强型（一般加强型）+削弱型（因果论证）", "planDate": "2026-09-04", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 18, "module": "判断推理", "no": 18, "name": "削弱型（论证模型+一般削弱型）", "planDate": "2026-09-04", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 19, "module": "判断推理", "no": 19, "name": "前提、解释、结论、评价型+定义判断1", "planDate": "2026-09-05", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 20, "module": "判断推理", "no": 20, "name": "定义判断2", "planDate": "2026-09-05", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 21, "module": "判断推理", "no": 21, "name": "类比推理", "planDate": "2026-09-06", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 22, "module": "判断推理", "no": 22, "name": "三段论", "planDate": "2026-09-06", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 23, "module": "判断推理", "no": 23, "name": "一拖五", "planDate": "2026-09-07", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 24, "module": "图形推理", "no": 24, "name": "图推梯度刷题1", "planDate": "2026-09-07", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 25, "module": "图形推理", "no": 25, "name": "图推梯度刷题2", "planDate": "2026-09-08", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 26, "module": "图形推理", "no": 26, "name": "图推梯度刷题3", "planDate": "2026-09-08", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 27, "module": "图形推理", "no": 27, "name": "图推梯度刷题4", "planDate": "2026-09-09", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 28, "module": "图形推理", "no": 28, "name": "图推梯度刷题5", "planDate": "2026-09-09", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 29, "module": "图形推理", "no": 29, "name": "图推梯度刷题6", "planDate": "2026-09-10", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 30, "module": "图形推理", "no": 30, "name": "图推梯度刷题7", "planDate": "2026-09-10", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 31, "module": "图形推理", "no": 31, "name": "图推梯度刷题8", "planDate": "2026-09-11", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 32, "module": "言语理解", "no": 32, "name": "主旨理解题1", "planDate": "2026-09-11", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 33, "module": "言语理解", "no": 33, "name": "主旨理解题2", "planDate": "2026-09-12", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 34, "module": "言语理解", "no": 34, "name": "主旨理解题3", "planDate": "2026-09-12", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 35, "module": "言语理解", "no": 35, "name": "标题添加、细节判断题", "planDate": "2026-09-13", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 36, "module": "言语理解", "no": 36, "name": "词句理解、语句填空题", "planDate": "2026-09-13", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 37, "module": "言语理解", "no": 37, "name": "语句排序、接语选择题", "planDate": "2026-09-14", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 38, "module": "言语理解", "no": 38, "name": "逻辑填空题1", "planDate": "2026-09-14", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 39, "module": "言语理解", "no": 39, "name": "逻辑填空题2", "planDate": "2026-09-15", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 40, "module": "言语理解", "no": 40, "name": "逻辑填空题3", "planDate": "2026-09-15", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 41, "module": "数量关系", "no": 41, "name": "倍数特性", "planDate": "2026-09-16", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 42, "module": "数量关系", "no": 42, "name": "方程问题", "planDate": "2026-09-16", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 43, "module": "数量关系", "no": 43, "name": "工程问题", "planDate": "2026-09-17", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 44, "module": "数量关系", "no": 44, "name": "几何问题", "planDate": "2026-09-17", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 45, "module": "数量关系", "no": 45, "name": "经济问题", "planDate": "2026-09-18", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 46, "module": "数量关系", "no": 46, "name": "行程问题", "planDate": "2026-09-18", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 47, "module": "数量关系", "no": 47, "name": "周期问题+等差数列", "planDate": "2026-09-19", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 48, "module": "数量关系", "no": 48, "name": "容斥原理+年龄问题", "planDate": "2026-09-19", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 49, "module": "数量关系", "no": 49, "name": "最值问题+溶液问题", "planDate": "2026-09-20", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 50, "module": "数量关系", "no": 50, "name": "排列组合和概率问题", "planDate": "2026-09-20", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 51, "module": "综合应用", "no": 51, "name": "指定要素1", "planDate": "2026-09-21", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 52, "module": "综合应用", "no": 52, "name": "指定要素2", "planDate": "2026-09-21", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 53, "module": "综合应用", "no": 53, "name": "指定要素3", "planDate": "2026-09-22", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 54, "module": "综合应用", "no": 54, "name": "指定要素4", "planDate": "2026-09-22", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 55, "module": "综合应用", "no": 55, "name": "指定要素5", "planDate": "2026-09-23", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 56, "module": "综合应用", "no": 56, "name": "指定要素6", "planDate": "2026-09-23", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 57, "module": "综合应用", "no": 57, "name": "综合分析", "planDate": "2026-09-24", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 58, "module": "综合应用", "no": 58, "name": "公文撰写1", "planDate": "2026-09-24", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 59, "module": "综合应用", "no": 59, "name": "公文撰写2", "planDate": "2026-09-25", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 60, "module": "综合应用", "no": 60, "name": "公文撰写3", "planDate": "2026-09-25", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}, {"id": 61, "module": "综合应用", "no": 61, "name": "公文撰写4", "planDate": "2026-09-26", "status": "未开始", "video": false, "practice": false, "accuracy": "", "review3": false, "review7": false}];
+const BASE_DAYS = [{"date": "2026-08-27", "weekday": "四", "stage": "阶段1", "topic": "判断推理、言语理解、资料分析", "videoTask": "查专项 增长率拔高专项；判断 必然性-母题模型（假言推理+朴素逻辑）；言语 主旨理解题1", "practiceTask": "每节课后限时刷题30题；共至少90题，正确率和耗时登记", "reviewTask": "整理错题：知识点/错因/正确方法；睡前20分钟回忆", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "视频100%完成；练习≥90%完成；当天错题入库", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-08-28", "weekday": "五", "stage": "阶段1", "topic": "图形推理、数量关系、综合应用", "videoTask": "数量 倍数特性；图推梯度刷题1；综应 指定要素1", "practiceTask": "每节课后限时刷题30题；共至少90题，正确率和耗时登记", "reviewTask": "整理错题：知识点/错因/正确方法；睡前20分钟回忆", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "视频100%完成；练习≥90%完成；当天错题入库", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-08-29", "weekday": "六", "stage": "阶段1", "topic": "判断推理、言语理解、资料分析", "videoTask": "查专项 间隔增长率拔高专项；判断 必然性-母题模型（综合推理+其他）；言语 主旨理解题2", "practiceTask": "每节课后限时刷题30题；共至少90题，正确率和耗时登记", "reviewTask": "整理错题：知识点/错因/正确方法；睡前20分钟回忆", "timeSlot": "09:00-12:30 + 14:30-17:30", "plannedHours": 6.5, "acceptance": "视频100%完成；练习≥90%完成；当天错题入库", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-08-30", "weekday": "日", "stage": "阶段1", "topic": "图形推理、数量关系、综合应用", "videoTask": "数量 方程问题；图推梯度刷题2；综应 指定要素2", "practiceTask": "每节课后限时刷题30题；共至少90题，正确率和耗时登记", "reviewTask": "整理错题：知识点/错因/正确方法；睡前20分钟回忆", "timeSlot": "09:00-12:30 + 14:30-17:30", "plannedHours": 6.5, "acceptance": "视频100%完成；练习≥90%完成；当天错题入库", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-08-31", "weekday": "一", "stage": "阶段1", "topic": "判断推理、言语理解、资料分析", "videoTask": "查专项 乘积增长率和年均增长率拔高专项；判断 必然性-母题模型（真假话+其他）；言语 主旨理解题3", "practiceTask": "每节课后限时刷题30题；共至少90题，正确率和耗时登记", "reviewTask": "整理错题：知识点/错因/正确方法；睡前20分钟回忆", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "视频100%完成；练习≥90%完成；当天错题入库", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-01", "weekday": "二", "stage": "阶段1", "topic": "图形推理、数量关系、综合应用", "videoTask": "数量 工程问题；图推梯度刷题3；综应 指定要素3", "practiceTask": "每节课后限时刷题30题；共至少90题，正确率和耗时登记", "reviewTask": "整理错题：知识点/错因/正确方法；睡前20分钟回忆", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "视频100%完成；练习≥90%完成；当天错题入库", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-02", "weekday": "三", "stage": "阶段1", "topic": "判断推理、言语理解、资料分析", "videoTask": "查专项 混合增长率拔高专项；判断 加强型（因果论证+论证模型）；言语 标题添加、细节判断题", "practiceTask": "每节课后限时刷题30题；共至少90题，正确率和耗时登记", "reviewTask": "整理错题：知识点/错因/正确方法；睡前20分钟回忆", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "视频100%完成；练习≥90%完成；当天错题入库", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-03", "weekday": "四", "stage": "阶段1", "topic": "图形推理、数量关系、综合应用", "videoTask": "数量 几何问题；图推梯度刷题4；综应 指定要素4", "practiceTask": "每节课后限时刷题30题；共至少90题，正确率和耗时登记", "reviewTask": "整理错题：知识点/错因/正确方法；睡前20分钟回忆", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "视频100%完成；练习≥90%完成；当天错题入库", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-04", "weekday": "五", "stage": "阶段1", "topic": "判断推理、言语理解、资料分析", "videoTask": "查专项 增长量拔高专项；判断 加强型（一般加强型）+削弱型（因果论证）；言语 词句理解、语句填空题", "practiceTask": "每节课后限时刷题30题；共至少90题，正确率和耗时登记", "reviewTask": "整理错题：知识点/错因/正确方法；睡前20分钟回忆", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "视频100%完成；练习≥90%完成；当天错题入库", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-05", "weekday": "六", "stage": "阶段1", "topic": "图形推理、数量关系、综合应用", "videoTask": "数量 经济问题；图推梯度刷题5；综应 指定要素5", "practiceTask": "每节课后限时刷题30题；共至少90题，正确率和耗时登记", "reviewTask": "整理错题：知识点/错因/正确方法；睡前20分钟回忆", "timeSlot": "09:00-12:30 + 14:30-17:30", "plannedHours": 6.5, "acceptance": "视频100%完成；练习≥90%完成；当天错题入库", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-06", "weekday": "日", "stage": "阶段1", "topic": "判断推理、言语理解、资料分析", "videoTask": "查专项 基期量拔高专项；判断 削弱型（论证模型+一般削弱型）；言语 语句排序、接语选择题", "practiceTask": "每节课后限时刷题30题；共至少90题，正确率和耗时登记", "reviewTask": "整理错题：知识点/错因/正确方法；睡前20分钟回忆", "timeSlot": "09:00-12:30 + 14:30-17:30", "plannedHours": 6.5, "acceptance": "视频100%完成；练习≥90%完成；当天错题入库", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-07", "weekday": "一", "stage": "阶段1", "topic": "图形推理、数量关系", "videoTask": "数量 行程问题；图推梯度刷题6", "practiceTask": "每节课后限时刷题30题；共至少60题，正确率和耗时登记", "reviewTask": "整理错题：知识点/错因/正确方法；睡前20分钟回忆", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "视频100%完成；练习≥90%完成；当天错题入库", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-08", "weekday": "二", "stage": "阶段1", "topic": "综合应用、资料分析", "videoTask": "综应 指定要素6；查专项 现期量拔高专项", "practiceTask": "每节课后限时刷题30题；共至少60题，正确率和耗时登记", "reviewTask": "整理错题：知识点/错因/正确方法；睡前20分钟回忆", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "视频100%完成；练习≥90%完成；当天错题入库", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-09", "weekday": "三", "stage": "阶段1", "topic": "判断推理、言语理解", "videoTask": "判断 前提、解释、结论、评价型+定义判断1；言语 逻辑填空题1", "practiceTask": "每节课后限时刷题30题；共至少60题，正确率和耗时登记", "reviewTask": "整理错题：知识点/错因/正确方法；睡前20分钟回忆", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "视频100%完成；练习≥90%完成；当天错题入库", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-10", "weekday": "四", "stage": "阶段1", "topic": "图形推理、数量关系", "videoTask": "数量 周期问题+等差数列；图推梯度刷题7", "practiceTask": "每节课后限时刷题30题；共至少60题，正确率和耗时登记", "reviewTask": "整理错题：知识点/错因/正确方法；睡前20分钟回忆", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "视频100%完成；练习≥90%完成；当天错题入库", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-11", "weekday": "五", "stage": "阶段1", "topic": "综合应用、资料分析", "videoTask": "综应 综合分析；查专项 比重拔高专项", "practiceTask": "每节课后限时刷题30题；共至少60题，正确率和耗时登记", "reviewTask": "整理错题：知识点/错因/正确方法；睡前20分钟回忆", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "视频100%完成；练习≥90%完成；当天错题入库", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-12", "weekday": "六", "stage": "阶段1", "topic": "判断推理、数量关系、言语理解", "videoTask": "判断 定义判断2；言语 逻辑填空题2；数量 容斥原理+年龄问题", "practiceTask": "每节课后限时刷题30题；共至少90题，正确率和耗时登记", "reviewTask": "整理错题：知识点/错因/正确方法；睡前20分钟回忆", "timeSlot": "09:00-12:30 + 14:30-17:30", "plannedHours": 6.5, "acceptance": "视频100%完成；练习≥90%完成；当天错题入库", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-13", "weekday": "日", "stage": "阶段1", "topic": "图形推理、综合应用、资料分析", "videoTask": "图推梯度刷题8；综应 公文撰写1；查专项 平均数拔高专项", "practiceTask": "每节课后限时刷题30题；共至少90题，正确率和耗时登记", "reviewTask": "整理错题：知识点/错因/正确方法；睡前20分钟回忆", "timeSlot": "09:00-12:30 + 14:30-17:30", "plannedHours": 6.5, "acceptance": "视频100%完成；练习≥90%完成；当天错题入库", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-14", "weekday": "一", "stage": "阶段1", "topic": "判断推理、言语理解", "videoTask": "判断 类比推理；言语 逻辑填空题3", "practiceTask": "每节课后限时刷题30题；共至少60题，正确率和耗时登记", "reviewTask": "整理错题：知识点/错因/正确方法；睡前20分钟回忆", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "视频100%完成；练习≥90%完成；当天错题入库", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-15", "weekday": "二", "stage": "阶段1", "topic": "数量关系、综合应用", "videoTask": "数量 最值问题+溶液问题；综应 公文撰写2", "practiceTask": "每节课后限时刷题30题；共至少60题，正确率和耗时登记", "reviewTask": "整理错题：知识点/错因/正确方法；睡前20分钟回忆", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "视频100%完成；练习≥90%完成；当天错题入库", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-16", "weekday": "三", "stage": "阶段1", "topic": "判断推理、资料分析", "videoTask": "查专项 倍数拔高专项；判断 三段论", "practiceTask": "每节课后限时刷题30题；共至少60题，正确率和耗时登记", "reviewTask": "整理错题：知识点/错因/正确方法；睡前20分钟回忆", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "视频100%完成；练习≥90%完成；当天错题入库", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-17", "weekday": "四", "stage": "阶段1", "topic": "数量关系、综合应用", "videoTask": "数量 排列组合和概率问题；综应 公文撰写3", "practiceTask": "每节课后限时刷题30题；共至少60题，正确率和耗时登记", "reviewTask": "整理错题：知识点/错因/正确方法；睡前20分钟回忆", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "视频100%完成；练习≥90%完成；当天错题入库", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-18", "weekday": "五", "stage": "阶段1", "topic": "判断推理、资料分析", "videoTask": "查专项 A和非A思想拔高专项；判断 一拖五", "practiceTask": "每节课后限时刷题30题；共至少60题，正确率和耗时登记", "reviewTask": "整理错题：知识点/错因/正确方法；睡前20分钟回忆", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "视频100%完成；练习≥90%完成；当天错题入库", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-19", "weekday": "六", "stage": "阶段1", "topic": "综合应用、资料分析", "videoTask": "综应 公文撰写4；查专项 资料分析高频易错点", "practiceTask": "每节课后限时刷题30题；共至少60题，正确率和耗时登记", "reviewTask": "整理错题：知识点/错因/正确方法；睡前20分钟回忆", "timeSlot": "09:00-12:30 + 14:30-17:30", "plannedHours": 6.5, "acceptance": "视频100%完成；练习≥90%完成；当天错题入库", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-20", "weekday": "日", "stage": "阶段1", "topic": null, "videoTask": null, "practiceTask": "每节课后限时刷题30题；共至少0题，正确率和耗时登记", "reviewTask": "整理错题：知识点/错因/正确方法；睡前20分钟回忆", "timeSlot": "09:00-12:30 + 14:30-17:30", "plannedHours": 6.5, "acceptance": "视频100%完成；练习≥90%完成；当天错题入库", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-21", "weekday": "一", "stage": "阶段2", "topic": "资料分析强化", "videoTask": "增长率/基期量/现期量/比重/平均数综合限时训练", "practiceTask": "60题，分2组限时", "reviewTask": "错题二刷+公式口述", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "正确率≥75%；未达标模块次日追加20题", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-22", "weekday": "二", "stage": "阶段2", "topic": "判断推理强化", "videoTask": "真假话、加强削弱、定义判断、类比、三段论", "practiceTask": "70题，模块限时", "reviewTask": "错因分类+易混选项", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "正确率≥75%；未达标模块次日追加20题", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-23", "weekday": "三", "stage": "阶段2", "topic": "言语理解强化", "videoTask": "主旨、细节、逻辑填空、语句排序", "practiceTask": "60题，控制平均用时", "reviewTask": "错误选项陷阱整理", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "正确率≥75%；未达标模块次日追加20题", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-24", "weekday": "四", "stage": "阶段2", "topic": "数量关系强化", "videoTask": "方程、工程、行程、排列概率等", "practiceTask": "40题，优先方法选择", "reviewTask": "不会题标记为“放弃/攻克”", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "正确率≥75%；未达标模块次日追加20题", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-25", "weekday": "五", "stage": "阶段2", "topic": "综合应用强化", "videoTask": "指定要素+综合分析/公文写作", "practiceTask": "2—3道材料题+1篇完整答案", "reviewTask": "答案结构对照+二次改写", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "正确率≥75%；未达标模块次日追加20题", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-26", "weekday": "六", "stage": "阶段2", "topic": "全科限时小套卷", "videoTask": "行测/职测模块混合训练", "practiceTask": "90—120分钟限时", "reviewTask": "统计模块正确率和时间分配", "timeSlot": "09:00-12:30 + 14:30-18:00", "plannedHours": 7.0, "acceptance": "正确率≥75%；未达标模块次日追加20题", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-27", "weekday": "日", "stage": "阶段2", "topic": "资料分析强化", "videoTask": "增长率/基期量/现期量/比重/平均数综合限时训练", "practiceTask": "60题，分2组限时", "reviewTask": "错题二刷+公式口述", "timeSlot": "09:00-12:30 + 14:30-18:00", "plannedHours": 7.0, "acceptance": "正确率≥75%；未达标模块次日追加20题", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-28", "weekday": "一", "stage": "阶段2", "topic": "判断推理强化", "videoTask": "真假话、加强削弱、定义判断、类比、三段论", "practiceTask": "70题，模块限时", "reviewTask": "错因分类+易混选项", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "正确率≥75%；未达标模块次日追加20题", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-29", "weekday": "二", "stage": "阶段2", "topic": "言语理解强化", "videoTask": "主旨、细节、逻辑填空、语句排序", "practiceTask": "60题，控制平均用时", "reviewTask": "错误选项陷阱整理", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "正确率≥75%；未达标模块次日追加20题", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-09-30", "weekday": "三", "stage": "阶段2", "topic": "数量关系强化", "videoTask": "方程、工程、行程、排列概率等", "practiceTask": "40题，优先方法选择", "reviewTask": "不会题标记为“放弃/攻克”", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "正确率≥75%；未达标模块次日追加20题", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-10-01", "weekday": "四", "stage": "阶段2", "topic": "综合应用强化", "videoTask": "指定要素+综合分析/公文写作", "practiceTask": "2—3道材料题+1篇完整答案", "reviewTask": "答案结构对照+二次改写", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "正确率≥75%；未达标模块次日追加20题", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-10-02", "weekday": "五", "stage": "阶段2", "topic": "全科限时小套卷", "videoTask": "行测/职测模块混合训练", "practiceTask": "90—120分钟限时", "reviewTask": "统计模块正确率和时间分配", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "正确率≥75%；未达标模块次日追加20题", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-10-03", "weekday": "六", "stage": "阶段2", "topic": "资料分析强化", "videoTask": "增长率/基期量/现期量/比重/平均数综合限时训练", "practiceTask": "60题，分2组限时", "reviewTask": "错题二刷+公式口述", "timeSlot": "09:00-12:30 + 14:30-18:00", "plannedHours": 7.0, "acceptance": "正确率≥75%；未达标模块次日追加20题", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-10-04", "weekday": "日", "stage": "阶段2", "topic": "判断推理强化", "videoTask": "真假话、加强削弱、定义判断、类比、三段论", "practiceTask": "70题，模块限时", "reviewTask": "错因分类+易混选项", "timeSlot": "09:00-12:30 + 14:30-18:00", "plannedHours": 7.0, "acceptance": "正确率≥75%；未达标模块次日追加20题", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-10-05", "weekday": "一", "stage": "阶段3", "topic": "模考1+复盘", "videoTask": "完整套卷1套，严格计时", "practiceTask": "完成整卷+逐题复盘", "reviewTask": "只记录可避免错误", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "整卷必须复盘；不允许只刷题不总结", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-10-06", "weekday": "二", "stage": "阶段3", "topic": "弱项专项1", "videoTask": "资料+判断弱项", "practiceTask": "80题限时", "reviewTask": "错题二刷", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "整卷必须复盘；不允许只刷题不总结", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-10-07", "weekday": "三", "stage": "阶段3", "topic": "模考2+复盘", "videoTask": "完整套卷1套，严格计时", "practiceTask": "完成整卷+逐题复盘", "reviewTask": "时间分配优化", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "整卷必须复盘；不允许只刷题不总结", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-10-08", "weekday": "四", "stage": "阶段3", "topic": "弱项专项2", "videoTask": "言语+数量弱项", "practiceTask": "70题限时", "reviewTask": "高频错法归纳", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "整卷必须复盘；不允许只刷题不总结", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-10-09", "weekday": "五", "stage": "阶段3", "topic": "模考3+复盘", "videoTask": "完整套卷1套，严格计时", "practiceTask": "完成整卷+逐题复盘", "reviewTask": "保持节奏", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "整卷必须复盘；不允许只刷题不总结", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-10-10", "weekday": "六", "stage": "阶段3", "topic": "综应专项", "videoTask": "材料题+公文/综合分析", "practiceTask": "1套完整综应或2大题", "reviewTask": "答案二改", "timeSlot": "09:00-12:30 + 14:30-18:00", "plannedHours": 7.0, "acceptance": "整卷必须复盘；不允许只刷题不总结", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-10-11", "weekday": "日", "stage": "阶段3", "topic": "模考4+复盘", "videoTask": "完整套卷1套，严格计时", "practiceTask": "完成整卷+逐题复盘", "reviewTask": "形成最终考场策略", "timeSlot": "09:00-12:30 + 14:30-18:00", "plannedHours": 7.0, "acceptance": "整卷必须复盘；不允许只刷题不总结", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-10-12", "weekday": "一", "stage": "阶段3", "topic": "全科错题回炉", "videoTask": "错题本前50%", "practiceTask": "至少100道错题重做", "reviewTask": "清除重复错误", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "整卷必须复盘；不允许只刷题不总结", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-10-13", "weekday": "二", "stage": "阶段3", "topic": "全科错题回炉", "videoTask": "错题本后50%+公式技巧", "practiceTask": "至少100道错题重做", "reviewTask": "最终弱项清单", "timeSlot": "工作日：06:30-08:00 + 20:00-21:30", "plannedHours": 3.0, "acceptance": "整卷必须复盘；不允许只刷题不总结", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-10-14", "weekday": "三", "stage": "阶段4", "topic": "考前回稳", "videoTask": "错题本、资料公式、判断套路、言语陷阱、数量方法、综应结构", "practiceTask": "少量保温题30—50题", "reviewTask": "21:30后停止学习，23:00前睡", "timeSlot": "06:30-08:00 + 20:00-21:00", "plannedHours": 2.5, "acceptance": "状态稳定；睡眠≥7小时", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-10-15", "weekday": "四", "stage": "阶段4", "topic": "考前回稳", "videoTask": "最后1次小套限时+综应框架", "practiceTask": "只做熟悉题，保持信心", "reviewTask": "准备证件、路线、考试用品", "timeSlot": "06:30-08:00 + 20:00-21:00", "plannedHours": 2.5, "acceptance": "状态稳定；睡眠≥7小时", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-10-16", "weekday": "五", "stage": "阶段4", "topic": "考前回稳", "videoTask": "仅看错题标签和最终清单", "practiceTask": "不做难题，不熬夜", "reviewTask": "按考试时间作息，早点睡", "timeSlot": "06:30-08:00 + 20:00-21:00", "plannedHours": 2.5, "acceptance": "状态稳定；睡眠≥7小时", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}, {"date": "2026-10-17", "weekday": "六", "stage": "考试日", "topic": "正式考试", "videoTask": "考前只看最终清单", "practiceTask": "按准考证科目与时间执行", "reviewTask": "考后不纠结单题", "timeSlot": "按准考证安排", "plannedHours": 0.0, "acceptance": "准时到场；稳定发挥", "status": "未开始", "actualHours": "", "questions": "", "correct": "", "reason": "", "reflection": ""}];
+const RULES = [{"title": "1. 不追求完美，追求完成", "text": "当天计划完成率必须≥90%；低于90%必须进入“补债”。"}, {"title": "2. 视频必须带题学", "text": "每节视频后至少30题或等量材料题；禁止只看视频。"}, {"title": "3. 错题必须三刷", "text": "第1次当天、第2次3天内、第3次7天内。"}, {"title": "4. 在职时间不足时", "text": "优先保证早学1.5小时 + 晚学1.5小时；通勤时间只做知识回忆/错题，不刷长视频。"}, {"title": "5. 手机红线", "text": "学习时手机开启专注模式；短视频、游戏、无目的社交娱乐≤30分钟/天。"}, {"title": "6. 周末补债机制", "text": "工作日欠下的任务必须在周末补完；禁止把欠债无限滚动到下周。"}, {"title": "7. 正确率红线", "text": "专题连续2次<60%，立即暂停推进新模块，集中补弱项。"}, {"title": "8. 模考红线", "text": "每次模考必须写“失分原因+下次改法”；只看分数没有意义。"}, {"title": "9. 睡眠红线", "text": "考前全程尽量保证≥7小时；不以熬夜换学习时长。"}, {"title": "10. 最终原则", "text": "计划可以根据真实进度调整，但“总学习量、刷题量、复盘量”不能减少。"}];
+const EXAM_DATE = "2026-10-17";
+const KEY = "career_exam_system_2026_v1";
+
+function clone(x){return JSON.parse(JSON.stringify(x));}
+function load(){
+  try{const d=JSON.parse(localStorage.getItem(KEY)); if(d) return d;}catch(e){}
+  return {courses:clone(BASE_COURSES), days:clone(BASE_DAYS), errors:[], mocks:[], weekly:[]};
+}
+let state=load();
+function save(){localStorage.setItem(KEY,JSON.stringify(state)); renderDashboard();}
+function ensureAppState(){state.questions=Array.isArray(state.questions)?state.questions:[];state.quizStats=state.quizStats||{done:0,correct:0};state.settings=state.settings||{reminderHour:20,reminderMinute:0};}
+ensureAppState();
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));}
+function pct(a,b){return b?Math.round(a/b*100):0;}
+function todayStr(){return new Date().toISOString().slice(0,10);}
+function daysToExam(){const a=new Date(todayStr()+"T00:00:00"),b=new Date(EXAM_DATE+"T00:00:00");return Math.ceil((b-a)/86400000);}
+function statusClass(s){return s==="完成"||s==="已完成"?"done":s==="未开始"?"warn":"late";}
+
+const tabs=[["dashboard","📊 仪表盘"],["daily","📅 每日计划"],["courses","📚 课程进度"],["errors","📝 错题三刷"],["quiz","✍️ 智能刷题"],["mocks","🧪 模考追踪"],["weekly","🔄 每周复盘"],["countdown","⏳ 倒计时"],["data","💾 数据管理"]];
+document.getElementById("nav").innerHTML=tabs.map((t,i)=>`<button class="${i===0?"active":""}" data-tab="${t[0]}">${t[1]}</button>`).join("");
+document.getElementById("nav").onclick=e=>{if(e.target.dataset.tab)show(e.target.dataset.tab)};
+function show(id){document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));document.querySelectorAll(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));document.getElementById(id).classList.add("active");renderAll();window.scrollTo({top:0,behavior:"smooth"});}
+
+function renderDashboard(){
+ const cDone=state.courses.filter(c=>c.status==="已完成").length;
+ const q=state.days.reduce((a,d)=>a+(+d.questions||0),0), correct=state.days.reduce((a,d)=>a+(+d.correct||0),0);
+ const dDone=state.days.filter(d=>d.status==="完成").length, err=state.errors.length, mock=state.mocks.length;
+ document.getElementById("dashboard").innerHTML=`
+ <div class="notice">今天最重要的事：不要追求“学了很久”，要追求“课程完成 + 刷题 + 错题复盘”。</div>
+ <div class="grid">
+  <div class="card metric"><div class="label">距离考试</div><div class="num red">${daysToExam()}天</div></div>
+  <div class="card metric"><div class="label">课程完成率</div><div class="num blue">${pct(cDone,state.courses.length)}%</div></div>
+  <div class="card metric"><div class="label">累计刷题</div><div class="num green">${q}</div></div>
+  <div class="card metric"><div class="label">累计正确率</div><div class="num orange">${pct(correct,q)}%</div></div>
+  <div class="card metric"><div class="label">完成学习日</div><div class="num">${dDone}/${state.days.length}</div></div>
+  <div class="card metric"><div class="label">错题库</div><div class="num">${err}</div></div>
+  <div class="card metric"><div class="label">模考次数</div><div class="num">${mock}</div></div>
+  <div class="card metric"><div class="label">今日状态</div><div class="num">${state.days.find(d=>d.date===todayStr())?.status||"待安排"}</div></div>
+ </div>
+ <div class="card"><div class="section-title">课程总体进度</div><div class="progress"><i style="width:${pct(cDone,state.courses.length)}%"></i></div><div class="small" style="margin-top:8px">已完成 ${cDone} / ${state.courses.length} 节</div></div>
+ <div class="card"><div class="section-title">今日任务</div>${renderTodayTasks()}</div>
+ <div class="card"><div class="section-title">严格执行规则</div>${RULES.map(r=>`<p><b>${esc(r.title)}</b><br><span class="small">${esc(r.text)}</span></p>`).join("")}</div>`;
+}
+function renderTodayTasks(){
+ const d=state.days.find(x=>x.date===todayStr()) || state.days.find(x=>x.status!=="完成");
+ if(!d)return '<div class="empty">全部计划已完成，保持复习和模考节奏。</div>';
+ return `<div><b>${esc(d.date)}｜${esc(d.topic)}</b><p class="small">🎬 视频：${esc(d.videoTask)}</p><p class="small">✍️ 练习：${esc(d.practiceTask)}</p><p class="small">🔁 复盘：${esc(d.reviewTask)}</p><p><span class="badge ${statusClass(d.status)}">${esc(d.status)}</span> <span class="small">计划 ${d.plannedHours} 小时｜${esc(d.timeSlot)}</span></p></div>`;
+}
+
+function renderDaily(){
+ document.getElementById("daily").innerHTML=`<div class="card"><div class="section-title">每日严格计划</div><div class="notice">每晚如实填写实际学习时长、刷题数、正确数和复盘。未完成必须写原因。</div><div class="tablewrap"><table><thead><tr><th>日期</th><th>主题/视频任务</th><th>计划时长</th><th>实际时长</th><th>刷题</th><th>正确</th><th>正确率</th><th>状态</th><th>未完成原因/复盘</th></tr></thead><tbody>
+${state.days.map((d,i)=>`<tr>
+<td>${d.date}<br><span class="small">${d.weekday}｜${d.stage}</span></td>
+<td><b>${esc(d.topic)}</b><br><span class="small">${esc(d.videoTask)}</span></td>
+<td>${d.plannedHours}h</td>
+<td><input type="number" min="0" step="0.5" value="${d.actualHours}" onchange="setDay(${i},'actualHours',this.value)"></td>
+<td><input type="number" min="0" value="${d.questions}" onchange="setDay(${i},'questions',this.value)"></td>
+<td><input type="number" min="0" value="${d.correct}" onchange="setDay(${i},'correct',this.value)"></td>
+<td>${pct(+d.correct||0,+d.questions||0)}%</td>
+<td><select onchange="setDay(${i},'status',this.value)">${["未开始","进行中","完成","补债"].map(s=>`<option ${d.status===s?"selected":""}>${s}</option>`).join("")}</select></td>
+<td><textarea placeholder="原因或今日复盘" onchange="setDay(${i},'reflection',this.value)">${esc(d.reflection)}</textarea></td>
+</tr>`).join("")}</tbody></table></div></div>`;
+}
+function setDay(i,k,v){state.days[i][k]=v;save();}
+
+function renderCourses(){
+ const mods=[...new Set(state.courses.map(c=>c.module))];
+ document.getElementById("courses").innerHTML=`<div class="card"><div class="section-title">第一阶段课程进度</div><div class="toolbar"><select id="moduleFilter" onchange="renderCourses()"><option value="">全部模块</option>${mods.map(m=>`<option>${esc(m)}</option>`).join("")}</select><input id="courseSearch" placeholder="搜索课程名称" oninput="renderCourses()"></div><div id="courseList"></div></div>`;
+ const mf=document.getElementById("moduleFilter").value, q=document.getElementById("courseSearch").value.toLowerCase();
+ const list=state.courses.filter(c=>(!mf||c.module===mf)&&(!q||c.name.toLowerCase().includes(q)));
+ document.getElementById("courseList").innerHTML=list.map(c=>`<div class="course-card">
+ <div class="course-head"><div><b>${esc(c.module)}｜${c.no}. ${esc(c.name)}</b><div class="small">计划日期：${c.planDate}</div></div><select style="max-width:110px" onchange="setCourse(${c.id-1},'status',this.value)">${["未开始","进行中","已完成"].map(s=>`<option ${c.status===s?"selected":""}>${s}</option>`).join("")}</select></div>
+ <div class="checks"><label><input type="checkbox" ${c.video?"checked":""} onchange="setCourse(${c.id-1},'video',this.checked)">视频完成</label><label><input type="checkbox" ${c.practice?"checked":""} onchange="setCourse(${c.id-1},'practice',this.checked)">配套刷题</label><label>正确率 <input style="width:80px" type="number" min="0" max="100" value="${c.accuracy}" onchange="setCourse(${c.id-1},'accuracy',this.value)">%</label><label><input type="checkbox" ${c.review3?"checked":""} onchange="setCourse(${c.id-1},'review3',this.checked)">3天复习</label><label><input type="checkbox" ${c.review7?"checked":""} onchange="setCourse(${c.id-1},'review7',this.checked)">7天复习</label></div>
+ </div>`).join("") || '<div class="empty">没有找到课程。</div>';
+}
+function setCourse(i,k,v){state.courses[i][k]=v;save();}
+
+function renderErrors(){
+ const due=state.errors.filter(e=>e.review1Date===todayStr()||e.review2Date===todayStr()).length;
+ document.getElementById("errors").innerHTML=`<div class="card"><div class="section-title">错题三刷</div><div class="notice">今天待复习：${due} 道。原则：当天订正 → 3天后二刷 → 7天后三刷。</div>
+ <div class="row"><div><label>日期</label><input id="eDate" type="date" value="${todayStr()}"></div><div><label>模块</label><input id="eModule" placeholder="如：资料分析"></div></div>
+ <div class="row"><div><label>题型/知识点</label><input id="eTopic"></div><div><label>错误原因</label><input id="eReason"></div></div>
+ <label>关键方法/口诀</label><textarea id="eMethod"></textarea><button class="primary" onclick="addError()">＋ 添加错题</button>
+ </div>
+ <div class="card"><div class="tablewrap"><table><thead><tr><th>日期</th><th>模块</th><th>知识点</th><th>错误原因</th><th>关键方法</th><th>当天订正</th><th>3天后二刷</th><th>7天后三刷</th><th></th></tr></thead><tbody>
+ ${state.errors.map((e,i)=>`<tr><td>${e.date}</td><td>${esc(e.module)}</td><td>${esc(e.topic)}</td><td>${esc(e.reason)}</td><td>${esc(e.method)}</td><td><input type="checkbox" ${e.corrected?"checked":""} onchange="toggleError(${i},'corrected',this.checked)"></td><td>${e.review1Date} <input type="checkbox" ${e.review1?"checked":""} onchange="toggleError(${i},'review1',this.checked)"></td><td>${e.review2Date} <input type="checkbox" ${e.review2?"checked":""} onchange="toggleError(${i},'review2',this.checked)"></td><td><button class="danger" onclick="deleteError(${i})">删除</button></td></tr>`).join("") || '<tr><td colspan="9" class="empty">还没有录入错题。</td></tr>'}</tbody></table></div></div>`;
+}
+function addError(){const date=document.getElementById("eDate").value, module=document.getElementById("eModule").value.trim(), topic=document.getElementById("eTopic").value.trim(); if(!date||!topic){alert("至少填写日期和知识点");return} const add=n=>{const d=new Date(date+"T00:00:00");d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)};state.errors.unshift({date,module,topic,reason:document.getElementById("eReason").value.trim(),method:document.getElementById("eMethod").value.trim(),corrected:false,review1Date:add(3),review1:false,review2Date:add(7),review2:false});save();renderErrors();}
+function toggleError(i,k,v){state.errors[i][k]=v;save();}
+function deleteError(i){if(confirm("确定删除这道错题？")){state.errors.splice(i,1);save();renderErrors();}}
+
+function renderMocks(){
+ document.getElementById("mocks").innerHTML=`<div class="card"><div class="section-title">模考追踪</div><div class="row"><div><label>日期</label><input id="mDate" type="date" value="${todayStr()}"></div><div><label>卷子名称</label><input id="mName"></div></div><div class="row"><div><label>资料分析</label><input id="mData" type="number"></div><div><label>判断推理</label><input id="mJudge" type="number"></div></div><div class="row"><div><label>言语理解</label><input id="mLang" type="number"></div><div><label>数量关系</label><input id="mMath" type="number"></div></div><div class="row"><div><label>用时（分钟）</label><input id="mTime" type="number"></div><div><label>最大问题</label><input id="mProblem"></div></div><label>下次改进</label><textarea id="mImprove"></textarea><button class="primary" onclick="addMock()">＋ 保存模考</button></div>
+ <div class="card"><div class="tablewrap"><table><thead><tr><th>日期</th><th>卷子</th><th>资料</th><th>判断</th><th>言语</th><th>数量</th><th>总分</th><th>用时</th><th>问题</th><th></th></tr></thead><tbody>${state.mocks.map((m,i)=>`<tr><td>${m.date}</td><td>${esc(m.name)}</td><td>${m.data}</td><td>${m.judge}</td><td>${m.lang}</td><td>${m.math}</td><td><b>${m.total}</b></td><td>${m.time}分</td><td>${esc(m.problem)}</td><td><button class="danger" onclick="state.mocks.splice(${i},1);save();renderMocks()">删除</button></td></tr>`).join("") || '<tr><td colspan="10" class="empty">暂无模考记录。</td></tr>'}</tbody></table></div></div>`;
+}
+function addMock(){const num=id=>+document.getElementById(id).value||0;const m={date:mDate.value,name:mName.value,data:num("mData"),judge:num("mJudge"),lang:num("mLang"),math:num("mMath"),time:num("mTime"),problem:mProblem.value,improve:mImprove.value};m.total=m.data+m.judge+m.lang+m.math;state.mocks.unshift(m);save();renderMocks();}
+
+function renderWeekly(){
+ document.getElementById("weekly").innerHTML=`<div class="card"><div class="section-title">每周复盘与纠偏</div><div class="notice">本周问题不解决，下周只会重复。请如实填写。</div><div class="tablewrap"><table><thead><tr><th>周次</th><th>周期</th><th>完成率</th><th>最强模块</th><th>最弱模块</th><th>最大问题</th><th>下周纠偏</th><th>核心目标</th><th>完成</th></tr></thead><tbody>${Array.from({length:8},(_,i)=>{const w=state.weekly[i]||{week:`第${i+1}周`,range:"",completion:"",strong:"",weak:"",problem:"",adjust:"",goal:"",done:false};return `<tr><td>${w.week}</td><td><input value="${esc(w.range)}" placeholder="如 8/27-9/2" onchange="setWeekly(${i},'range',this.value)"></td><td><input type="number" min="0" max="100" value="${w.completion}" onchange="setWeekly(${i},'completion',this.value)">%</td><td><input value="${esc(w.strong)}" onchange="setWeekly(${i},'strong',this.value)"></td><td><input value="${esc(w.weak)}" onchange="setWeekly(${i},'weak',this.value)"></td><td><textarea onchange="setWeekly(${i},'problem',this.value)">${esc(w.problem)}</textarea></td><td><textarea onchange="setWeekly(${i},'adjust',this.value)">${esc(w.adjust)}</textarea></td><td><textarea onchange="setWeekly(${i},'goal',this.value)">${esc(w.goal)}</textarea></td><td><input type="checkbox" ${w.done?"checked":""} onchange="setWeekly(${i},'done',this.checked)"></td></tr>`}).join("")}</tbody></table></div></div>`;
+}
+function setWeekly(i,k,v){if(!state.weekly[i])state.weekly[i]={week:`第${i+1}周`,range:"",completion:"",strong:"",weak:"",problem:"",adjust:"",goal:"",done:false};state.weekly[i][k]=v;save();}
+
+function renderCountdown(){
+ const cDone=state.courses.filter(c=>c.status==="已完成").length;
+ document.getElementById("countdown").innerHTML=`<div class="card"><div class="section-title">距离 2026 年 10 月 17 日考试</div><div class="num red" style="font-size:56px">${daysToExam()} 天</div><div class="progress" style="margin-top:14px"><i style="width:${pct(cDone,state.courses.length)}%"></i></div><p class="small">课程进度：${cDone} / ${state.courses.length}</p></div><div class="card"><div class="section-title">当前阶段检查</div><p>□ 课程全部完成</p><p>□ 每节课完成配套刷题</p><p>□ 错题完成 3 天、7 天复习</p><p>□ 每周至少一次完整模考</p><p>□ 根据模考持续修正薄弱模块</p></div>`;
+}
+
+function renderData(){
+ document.getElementById("data").innerHTML=`<div class="card"><div class="section-title">💾 App 数据管理</div><p class="small">数据保存在 App 本地。建议每周创建一次备份，换手机时先恢复备份。</p><div class="toolbar"><button class="primary" onclick="nativeBackup()">📦 创建 App 备份</button><button class="ghost" onclick="nativeRestore()">📥 恢复 App 备份</button><button class="ghost" onclick="nativePickQuestionFile()">📂 导入 PDF / Word 题库</button><button class="danger" onclick="resetAll()">恢复初始计划</button></div><div class="native-tip">题库导入：支持 PDF、DOCX、TXT。导入后系统会尽量识别“题号 + A/B/C/D 选项 + 答案”。扫描版 PDF 需要先做 OCR。</div></div><div class="card"><div class="section-title">🔔 每日学习提醒</div><div class="row"><div><label>提醒时间</label><input id="reminderTime" type="time" value="${String(state.settings?.reminderHour??20).padStart(2,'0')}:${String(state.settings?.reminderMinute??0).padStart(2,'0')}"></div><div style="display:flex;align-items:end"><button class="primary" onclick="saveReminder()">保存每日提醒</button></div></div><p class="small">建议设置在你每天最稳定的学习时间，例如 20:00。</p></div><div class="card"><div class="section-title">📊 题库数据</div><p>已导入题目：<b>${state.questions?.length||0}</b> 道｜累计作答：<b>${state.quizStats?.done||0}</b>｜正确：<b>${state.quizStats?.correct||0}</b></p><button class="primary" onclick="show('quiz')">进入在线刷题</button></div>`;
+}
+function nativeBackup(){const data=JSON.stringify(state,null,2);if(window.Android&&Android.exportBackup){Android.exportBackup(data,'管理系统备份_'+todayStr()+'.json');}else exportData();}
+function nativeRestore(){if(window.Android&&Android.importBackup){Android.importBackup();}else document.getElementById('importFile')?.click();}
+function nativePickQuestionFile(){if(window.Android&&Android.pickQuestionFile){Android.pickQuestionFile();}else alert('请在 Android App 中使用 PDF/Word 题库导入。');}
+function nativeReminderPrompt(){show('data');setTimeout(()=>document.getElementById('reminderTime')?.scrollIntoView({behavior:'smooth',block:'center'}),100)}
+function saveReminder(){const v=document.getElementById('reminderTime').value||'20:00',a=v.split(':').map(Number);state.settings={...(state.settings||{}),reminderHour:a[0],reminderMinute:a[1]};save();if(window.Android&&Android.scheduleReminder){Android.scheduleReminder(a[0],a[1]);alert('每日提醒已设置为 '+v);}else alert('提醒已保存。Android App 安装后可发送系统通知。');}
+function exportData(){const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="管理系统备份_"+todayStr()+".json";a.click();URL.revokeObjectURL(a.href);}
+function importData(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{state=JSON.parse(r.result);ensureAppState();save();renderAll();alert("导入成功");}catch(e){alert("文件格式不正确");}};r.readAsText(f,"utf-8");}
+function receiveNativeBackup(text){try{state=JSON.parse(text);ensureAppState();save();renderAll();alert('App 备份恢复成功');}catch(e){alert('备份文件格式不正确');}}
+function receiveImportedQuestionText(name,text){try{const added=parseImportedQuestions(name,text);alert('已从 '+name+' 识别并导入 '+added+' 道题目');show('quiz');renderQuiz();}catch(e){alert('题库导入失败：'+e.message);}}
+function parseImportedQuestions(name,text){ensureAppState();text=(text||'').replace(/\r/g,'').replace(/\u00a0/g,' ').trim();if(!text)throw new Error('未读取到可识别文字');const chunks=text.split(/(?:^|\n)\s*(?=\d{1,4}[、\.．\)]\s*)/);let added=0;for(const raw of chunks){let c=raw.trim();if(!c)continue;const q=c.match(/^\d{1,4}[、\.．\)]\s*([\s\S]*)$/);if(!q)continue;c=q[1];const opts=[];let answer='';const am=c.match(/(?:答案|正确答案)\s*[：: ]\s*([A-D])/i);if(am){answer=am[1].toUpperCase();c=c.replace(am[0],'');}const parts=c.split(/\n\s*([A-D])[\.、．、\s]+/i);let stem=parts[0].trim();for(let i=1;i<parts.length;i+=2){const letter=parts[i].toUpperCase(), val=(parts[i+1]||'').trim();opts.push({letter,text:val});}if(opts.length<2){const inline=c.match(/([A-D])[\.、．]\s*([^A-D\n]+?)(?=\s+[A-D][\.、．]|$)/gi);if(inline){for(const x of inline){const m=x.match(/^([A-D])[\.、．]\s*([\s\S]*)$/i);if(m)opts.push({letter:m[1].toUpperCase(),text:m[2].trim()});}stem=c.replace(/\s*[A-D][\.、．][\s\S]*/,'').trim();}}if(stem&&opts.length>=2){state.questions.push({id:Date.now()+added,source:name,stem,options:opts,answer,createdAt:todayStr()});added++;}}
+if(!added)throw new Error('没有识别到标准选择题格式');save();return added;}
+function renderQuiz(){ensureAppState();const qs=state.questions||[];const q=qs[window.quizIndex||0]||null;document.getElementById('quiz').innerHTML=`<div class="card"><div class="section-title">✍️ 在线刷题</div><div class="toolbar"><button class="primary" onclick="nativePickQuestionFile()">📂 导入题库</button><button class="ghost" onclick="manualQuestion()">＋ 手动录题</button><button class="ghost" onclick="show('errors')">🎯 查看错题本</button></div><div class="small">题库：${qs.length} 道｜累计作答：${state.quizStats?.done||0}｜正确：${state.quizStats?.correct||0}</div></div>${q?`<div class="card"><div class="quiz-meta"><span>${window.quizIndex+1} / ${qs.length}</span><span>${esc(q.source||'本地题库')}</span></div><div class="quiz-question">${esc(q.stem)}</div><div style="margin-top:16px">${q.options.map(o=>`<button class="option" onclick="answerQuiz('${o.letter}')"><b>${o.letter}.</b> ${esc(o.text)}</button>`).join('')}</div><div class="toolbar"><button class="ghost" onclick="prevQuiz()">上一题</button><button class="ghost" onclick="nextQuiz()">下一题</button></div></div>`:'<div class="card empty">暂无题目。请先导入 PDF / Word / TXT 题库，或手动录入一道题。</div>'}`;}
+function answerQuiz(letter){const q=state.questions[window.quizIndex||0];if(!q)return;if(!q.answer){alert('该题未识别到答案，可在题库源文件中添加“答案：A”后重新导入。');return;}state.quizStats.done++;const ok=letter===q.answer;if(ok)state.quizStats.correct++;else state.errors.unshift({date:todayStr(),module:'在线刷题',topic:q.stem.slice(0,80),reason:'刷题错误：选择 '+letter+'，正确答案 '+q.answer,method:'回看题干与选项逻辑，记录正确解题方法',corrected:false,review1Date:isoAdd(todayStr(),3),review1:false,review2Date:isoAdd(todayStr(),7),review2:false});save();renderQuiz();alert(ok?'回答正确！':'回答错误，已自动加入错题本。');}
+function nextQuiz(){const n=state.questions.length;if(n){window.quizIndex=((window.quizIndex||0)+1)%n;renderQuiz();}}
+function prevQuiz(){const n=state.questions.length;if(n){window.quizIndex=((window.quizIndex||0)-1+n)%n;renderQuiz();}}
+function manualQuestion(){const stem=prompt('请输入题干：');if(!stem)return;const a=prompt('A 选项：')||'',b=prompt('B 选项：')||'',c=prompt('C 选项：')||'',d=prompt('D 选项：')||'',answer=(prompt('正确答案（A/B/C/D）：')||'').toUpperCase();state.questions.push({id:Date.now(),source:'手动录入',stem,options:[{letter:'A',text:a},{letter:'B',text:b},{letter:'C',text:c},{letter:'D',text:d}].filter(x=>x.text),answer,createdAt:todayStr()});save();renderQuiz();}
+function resetAll(){if(confirm("确定恢复到初始计划？当前 App 中的记录将被清空。")){state={courses:clone(BASE_COURSES),days:clone(BASE_DAYS),errors:[],mocks:[],weekly:[],questions:[],quizStats:{done:0,correct:0},settings:{reminderHour:20,reminderMinute:0}};save();renderAll();}}
+
+/* ===== 智能备考 2.0 ===== */
+function isoAdd(date,n){const d=new Date(date+"T00:00:00");d.setDate(d.getDate()+n);return d.toISOString().slice(0,10)}
+function dateDiff(a,b){return Math.round((new Date(b+"T00:00:00")-new Date(a+"T00:00:00"))/86400000)}
+function studyStreak(){
+  const done=new Set(state.days.filter(d=>d.status==="完成").map(d=>d.date));
+  let cur=todayStr(), streak=0;
+  if(!done.has(cur)) cur=isoAdd(cur,-1);
+  while(done.has(cur)){streak++;cur=isoAdd(cur,-1)}
+  return streak;
+}
+function studyTrend(){
+  const arr=state.days.filter(d=>(+d.questions||0)>0 || (+d.actualHours||0)>0).slice(-14);
+  return arr.map(d=>({date:d.date.slice(5),hours:+d.actualHours||0,accuracy:pct(+d.correct||0,+d.questions||0)}));
+}
+function svgTrend(data){
+  if(!data.length)return '<div class="empty">完成每日打卡后，这里会自动生成学习趋势图。</div>';
+  const w=700,h=220,p=28,max=Math.max(1,...data.map(x=>x.hours));
+  const pts=data.map((x,i)=>({x:p+i*((w-2*p)/Math.max(1,data.length-1)),y:h-p-(x.hours/max)*(h-2*p)}));
+  const poly=pts.map(p=>`${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" ");
+  return `<svg class="chart" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none">
+    <line class="chart-grid" x1="${p}" y1="${h-p}" x2="${w-p}" y2="${h-p}"/>
+    <line class="chart-grid" x1="${p}" y1="${p}" x2="${w-p}" y2="${p}"/>
+    <polyline class="chart-line" points="${poly}"/>
+    ${pts.map((pt,i)=>`<circle class="chart-dot" cx="${pt.x}" cy="${pt.y}" r="4"><title>${data[i].date}：${data[i].hours}小时</title></circle>`).join("")}
+    ${data.map((x,i)=>`<text x="${pts[i].x}" y="${h-7}" text-anchor="middle" font-size="10" fill="#728096">${x.date}</text>`).join("")}
+  </svg>`;
+}
+function weakModules(){
+  const map={};
+  state.courses.forEach(c=>{
+    if(!map[c.module])map[c.module]={scores:[],errors:0};
+    if(c.accuracy!=="" && c.accuracy!=null) map[c.module].scores.push(+c.accuracy);
+  });
+  state.errors.forEach(e=>{if(e.module){if(!map[e.module])map[e.module]={scores:[],errors:0};map[e.module].errors++}});
+  return Object.entries(map).map(([name,v])=>{
+    const acc=v.scores.length?v.scores.reduce((a,b)=>a+b,0)/v.scores.length:60;
+    const score=100-acc+Math.min(v.errors*3,30);
+    return {name,acc:Math.round(acc),errors:v.errors,score};
+  }).sort((a,b)=>b.score-a.score);
+}
+function delayInfo(){
+  const today=todayStr();
+  let unfinished=state.days.filter(d=>d.date<today && d.status!=="完成").sort((a,b)=>a.date.localeCompare(b.date));
+  let consecutive=0;
+  for(let i=state.days.length-1;i>=0;i--){
+    const d=state.days[i];
+    if(d.date>today)continue;
+    if(d.status==="完成")break;
+    if(d.status==="未开始"||d.status==="进行中"||d.status==="补债")consecutive++;
+  }
+  return {unfinished,consecutive};
+}
+function levelInfo(){
+  const cRate=pct(state.courses.filter(c=>c.status==="已完成").length,state.courses.length);
+  const q=state.days.reduce((a,d)=>a+(+d.questions||0),0);
+  const correct=state.days.reduce((a,d)=>a+(+d.correct||0),0);
+  const acc=pct(correct,q), streak=studyStreak(), mocks=state.mocks.length;
+  const score=Math.round(cRate*.45+acc*.35+Math.min(streak,14)/14*10+Math.min(mocks,6)/6*10);
+  let name="起步者",icon="🌱";
+  if(score>=85){name="冲刺王者";icon="👑"} else if(score>=70){name="上岸强者";icon="🏆"} else if(score>=50){name="稳定进阶";icon="🚀"} else if(score>=30){name="持续积累";icon="🔥"}
+  return {score,name,icon,cRate,acc,streak,mocks};
+}
+function recommendations(){
+  const today=todayStr(), r=[];
+  const d=state.days.find(x=>x.date===today);
+  const overdue3=state.errors.filter(e=>!e.review1&&e.review1Date<=today).length;
+  const overdue7=state.errors.filter(e=>!e.review2&&e.review2Date<=today).length;
+  if(overdue3||overdue7)r.push(`优先完成错题复习：3天复习 ${overdue3} 道，7天复习 ${overdue7} 道。`);
+  if(d)r.push(`今日主线：${d.topic}；先完成“${d.videoTask}”，再完成“${d.practiceTask}”。`);
+  const weak=weakModules()[0];
+  if(weak)r.push(`薄弱模块优先：${weak.name}（当前综合评估偏弱），额外安排 20—40 分钟针对性训练。`);
+  const di=delayInfo();
+  if(di.unfinished.length)r.push(`补债任务：优先处理 ${di.unfinished[0].date} 的未完成计划，避免欠账继续滚动。`);
+  return r.slice(0,4);
+}
+function mobileQuick(){
+  return `<div class="mobile-quick">
+    <button onclick="show('daily')">📅<br>今日计划</button>
+    <button onclick="show('courses')">📚<br>课程</button>
+    <button onclick="show('errors')">📝<br>错题</button>
+    <button onclick="show('mocks')">🧪<br>模考</button>
+  </div>`;
+}
+function renderDashboard(){
+ const li=levelInfo(), trend=studyTrend(), weak=weakModules().slice(0,3), delay=delayInfo(), recs=recommendations();
+ const q=state.days.reduce((a,d)=>a+(+d.questions||0),0), correct=state.days.reduce((a,d)=>a+(+d.correct||0),0);
+ const todayDone=state.days.find(d=>d.date===todayStr())?.status==="完成";
+ document.getElementById("dashboard").innerHTML=`
+ ${mobileQuick()}
+ <div class="smart-hero">
+   <div class="level">${li.icon} ${li.name} · 上岸进度 ${li.score}%</div>
+   <div class="big">${daysToExam()}<span style="font-size:18px;font-weight:700"> 天</span></div>
+   <div class="hero-sub">距离考试剩余时间。今天的每一次完成，都在拉近上岸距离。</div>
+ </div>
+ <div class="quick-grid">
+  <button class="quick-card" onclick="show('daily')"><div class="qicon">🔥</div><div class="qnum">${li.streak}天</div><div class="qlabel">连续打卡</div></button>
+  <button class="quick-card" onclick="show('courses')"><div class="qicon">📚</div><div class="qnum">${li.cRate}%</div><div class="qlabel">课程完成率</div></button>
+  <button class="quick-card" onclick="show('errors')"><div class="qicon">🎯</div><div class="qnum">${li.acc}%</div><div class="qlabel">累计正确率</div></button>
+  <button class="quick-card" onclick="show('mocks')"><div class="qicon">🧪</div><div class="qnum">${li.mocks}</div><div class="qlabel">模考次数</div></button>
+  <button class="quick-card" onclick="show('quiz')"><div class="qicon">✍️</div><div class="qnum">${state.questions?.length||0}</div><div class="qlabel">在线刷题</div></button>
+ </div>
+ <div class="card"><div class="section-title">📅 智能推荐：今天优先做什么</div>
+   ${recs.map((x,i)=>`<div class="reco"><b>优先级 ${i+1}</b>　${esc(x)}</div>`).join("") || '<div class="empty">今天没有计划任务。</div>'}
+ </div>
+ ${delay.consecutive>=2?`<div class="card"><div class="section-title">🚨 连续拖延预警</div><div class="alert">你当前已连续 ${delay.consecutive} 个计划日未完成。建议立即停止继续新增任务，先完成最早的“补债任务”。</div></div>`:
+ `<div class="card"><div class="section-title">🟢 执行状态</div><div class="good">${todayDone?"今天已完成计划，继续安排错题复习或薄弱模块训练。":"今天还未完成打卡。请优先完成今日主线任务。"}</div></div>`}
+ <div class="card"><div class="section-title">📈 近14次学习趋势</div>${svgTrend(trend)}<div class="small">曲线反映每日实际学习时长。持续稳定比偶尔突击更重要。</div></div>
+ <div class="card"><div class="section-title">🧠 薄弱模块智能判断</div>
+   ${weak.length?weak.map((w,i)=>`<p><b>${i+1}. ${esc(w.name)}</b> <span class="badge ${i===0?'late':'warn'}">综合薄弱度 ${w.score}</span><br><span class="small">课程平均正确率：${w.acc}%｜已记录错题：${w.errors} 道</span></p>`).join(""):'<div class="empty">完成课程并填写正确率后，系统会自动判断薄弱模块。</div>'}
+ </div>
+ <div class="card"><div class="section-title">🏆 上岸进度等级说明</div>
+   <div class="small">🌱 起步者 → 🔥 持续积累 → 🚀 稳定进阶 → 🏆 上岸强者 → 👑 冲刺王者</div>
+   <div class="progress" style="margin-top:10px"><i style="width:${li.score}%"></i></div>
+   <div class="small" style="margin-top:8px">等级综合参考课程完成率、刷题正确率、连续打卡和模考执行情况。</div>
+ </div>`;
+}
+
+function renderAll(){renderDashboard();renderDaily();renderCourses();renderErrors();renderMocks();renderWeekly();renderCountdown();renderData();renderQuiz();}
+
+function bootSystem(){
+  try{
+    ensureAppState();
+    renderAll();
+  }catch(err){
+    console.error(err);
+    const main=document.querySelector("main");
+    if(main){
+      main.innerHTML='<div class="card" style="margin-top:20px"><h2 style="margin-top:0">管理系统启动异常</h2><p>请不要在文件管理器内置预览器中打开本文件。</p><p><b>正确方式：</b>使用 Chrome 或 Edge 浏览器打开，然后添加到手机桌面。</p><p style="color:#728096;font-size:13px">错误信息：'+String(err.message||err).replace(/[<>&]/g,"")+'</p></div>';
+    }
+  }
+}
+window.addEventListener("error",function(e){console.error(e.error||e.message);});
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", bootSystem, {once:true});
+} else {
+  bootSystem();
+}
+
+/* ===== 真正的刷题系统 3.0 ===== */
+if(!state.questionBanks) state.questionBanks=[];
+if(!state.quizStats) state.quizStats={answered:0,correct:0,totalSeconds:0,streak:0};
+if(!state.quizHistory) state.quizHistory=[];
+let quizSession=null, quizTimer=null;
+function qid(){return 'q_'+Date.now()+'_'+Math.random().toString(36).slice(2,7)}
+function normalizeOption(x){return String(x||'').replace(/^[A-DＡ-Ｄ][\.、．\)）]\s*/i,'').trim()}
+function parseImportedQuestions(name,text){
+ const clean=String(text||'').replace(/\r/g,'\n').replace(/[ \t]+/g,' ').replace(/\n{3,}/g,'\n\n');
+ const parts=clean.split(/(?=\n?\s*\d{1,4}[\.、．、]\s*)/).map(x=>x.trim()).filter(x=>x.length>8);
+ const qs=[];
+ for(const part of parts){
+   const opts=[]; const om=part.match(/(?:^|\n|\s)([A-DＡ-Ｄ])[\.、．\)）]\s*([^\n]+?)(?=(?:\n|\s)[A-DＡ-Ｄ][\.、．\)）]|\n?(?:答案|解析)\s*[:：]|$)/g);
+   if(om&&om.length>=2){
+     om.forEach(z=>opts.push(normalizeOption(z)));
+     let stem=part.slice(0,part.indexOf(om[0])).replace(/^\s*\d+[\.、．、]\s*/,'').trim();
+     let ans=(part.match(/(?:答案|参考答案)\s*[:：]\s*([A-DＡ-Ｄ])/i)||[])[1]||'';
+     ans=ans.replace('Ａ','A').replace('Ｂ','B').replace('Ｃ','C').replace('Ｄ','D');
+     let analysis=(part.match(/(?:解析|答案解析)\s*[:：]([\s\S]*)$/i)||[])[1]||'';
+     qs.push({id:qid(),stem,options:opts.slice(0,4),answer:ans,analysis:analysis.trim(),source:name,category:'导入题库'});
+   }
+ }
+ return qs;
+}
+function receiveImportedQuestionText(name,text){
+ const qs=parseImportedQuestions(name,text);
+ if(!qs.length){alert('未能自动识别出标准选择题。请确保题目格式类似：1. 题干\\nA. 选项\\nB. 选项\\n答案：A');return}
+ state.questionBanks.push({id:'bank_'+Date.now(),name:name,count:qs.length,createdAt:new Date().toLocaleString(),questions:qs}); save(); alert('成功导入 '+qs.length+' 道题'); renderQuiz();
+}
+function startQuiz(mode){
+ const all=state.questionBanks.flatMap(b=>b.questions||[]); if(!all.length){alert('请先导入 PDF、Word 或 TXT 题库');return}
+ let qs=[...all]; if(mode==='random') qs.sort(()=>Math.random()-.5);
+ quizSession={mode,questions:qs,index:0,answers:{},started:Date.now(),startItem:Date.now()};
+ clearInterval(quizTimer); quizTimer=setInterval(()=>{const el=document.getElementById('quizTimer');if(el&&quizSession){const sec=Math.floor((Date.now()-quizSession.started)/1000);el.textContent=Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0')}},1000);
+ renderQuiz();
+}
+function answerQuiz(letter){if(!quizSession)return;quizSession.answers[quizSession.index]=letter;renderQuiz()}
+function nextQuiz(step){if(!quizSession)return;quizSession.index=Math.max(0,Math.min(quizSession.questions.length-1,quizSession.index+step));renderQuiz()}
+function finishQuiz(){if(!quizSession)return;clearInterval(quizTimer);const qn=quizSession.questions.length;let correct=0;const now=Date.now();
+ quizSession.questions.forEach((q,i)=>{const a=quizSession.answers[i]||'';const ok=a&&a===q.answer;if(ok)correct++;else if(a){state.errors.unshift({id:'quizerr_'+qid(),date:todayStr(),module:q.category||'智能刷题',point:(q.stem||'').slice(0,30),reason:'在线刷题答错：选择 '+a+'，正确答案 '+q.answer,method:q.analysis||'请复习题目解析',review1:false,review2:false,review1Date:isoAdd(todayStr(),3),review2Date:isoAdd(todayStr(),7)});}});
+ const used=Math.floor((now-quizSession.started)/1000); state.quizStats.answered+=qn;state.quizStats.correct+=correct;state.quizStats.totalSeconds+=used;state.quizStats.streak=(correct===qn)?state.quizStats.streak+1:0;state.quizHistory.unshift({date:new Date().toLocaleString(),mode:quizSession.mode,count:qn,correct,seconds:used});quizSession=null;save();renderQuiz();alert('本次完成：'+correct+'/'+qn+'，错误题已自动加入错题本');}
+function deleteBank(id){if(!confirm('确定删除该题库吗？'))return;state.questionBanks=state.questionBanks.filter(b=>b.id!==id);save();renderQuiz()}
+function renderQuiz(){const root=document.getElementById('quiz');if(!root)return;const all=state.questionBanks.flatMap(b=>b.questions||[]);const st=state.quizStats||{answered:0,correct:0,totalSeconds:0,streak:0};
+ if(!quizSession){root.innerHTML=`<div class="card"><div class="section-title">✍️ 真正的刷题系统 3.0</div><div class="notice">流程：PDF/Word/TXT 导入 → 自动识别选择题 → 生成题库 → 顺序/随机刷题 → 计时 → 自动判分 → 错题自动入库 → 数据统计</div><div class="grid"><div class="card metric"><div class="label">题库数量</div><div class="num blue">${state.questionBanks.length}</div></div><div class="card metric"><div class="label">可刷题目</div><div class="num green">${all.length}</div></div><div class="card metric"><div class="label">累计答题</div><div class="num orange">${st.answered}</div></div><div class="card metric"><div class="label">正确率</div><div class="num red">${pct(st.correct,st.answered)}%</div></div></div><div class="toolbar"><button class="primary" onclick="Android&&Android.pickQuestionFile?Android.pickQuestionFile():alert('请在安卓App内导入')">📂 导入 PDF / Word / TXT</button><button class="ghost" onclick="startQuiz('order')">▶ 顺序刷题</button><button class="ghost" onclick="startQuiz('random')">🎲 随机刷题</button></div><div class="small">支持标准选择题格式。扫描版 PDF 需先进行 OCR；导入后建议抽查题干和答案是否识别正确。</div></div><div class="card"><div class="section-title">📚 我的题库</div>${state.questionBanks.length?state.questionBanks.map(b=>`<div class="course-card"><div class="course-head"><b>${esc(b.name)}</b><button class="danger" onclick="deleteBank('${b.id}')">删除</button></div><div class="small">${b.count} 道｜导入时间：${esc(b.createdAt)}</div></div>`).join(''):'<div class="empty">暂未导入题库</div>'}</div><div class="card"><div class="section-title">📊 最近刷题记录</div>${(state.quizHistory||[]).slice(0,8).map(x=>`<p><b>${x.mode==='random'?'随机刷题':'顺序刷题'}</b>：${x.correct}/${x.count}，正确率 ${pct(x.correct,x.count)}%，用时 ${Math.floor(x.seconds/60)} 分钟<br><span class="small">${esc(x.date)}</span></p>`).join('')||'<div class="empty">完成刷题后自动生成记录</div>'}</div>`;return}
+ const q=quizSession.questions[quizSession.index], chosen=quizSession.answers[quizSession.index]||'', letters=['A','B','C','D'];
+ root.innerHTML=`<div class="card"><div class="course-head"><div><b>第 ${quizSession.index+1}/${quizSession.questions.length} 题</b><div class="small">${quizSession.mode==='random'?'随机模式':'顺序模式'} · 本次用时 <span id="quizTimer">0:00</span></div></div><button class="danger" onclick="finishQuiz()">交卷并判分</button></div><div class="progress" style="margin:12px 0"><i style="width:${((quizSession.index+1)/quizSession.questions.length*100).toFixed(1)}%"></i></div><div style="font-size:17px;line-height:1.7;margin:18px 0"><b>${esc(q.stem)}</b></div><div class="checks" style="display:block">${q.options.map((o,i)=>`<button class="ghost" style="display:block;width:100%;text-align:left;margin:10px 0;${chosen===letters[i]?'border:2px solid var(--blue);background:#eef6ff':''}" onclick="answerQuiz('${letters[i]}')"><b>${letters[i]}.</b> ${esc(o)}</button>`).join('')}</div><div class="toolbar" style="margin-top:16px"><button class="ghost" onclick="nextQuiz(-1)">← 上一题</button><button class="primary" onclick="nextQuiz(1)">下一题 →</button></div></div>`}
+
+</script>
+</body></html>
